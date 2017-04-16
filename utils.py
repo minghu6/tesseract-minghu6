@@ -8,8 +8,13 @@ from subprocess import Popen, PIPE
 import os
 import re
 from distutils.version import LooseVersion
+import platform
 
+def iswin():
+    return platform.platform().upper().startswith('WIN')
 
+def islinux():
+    return platform.platform().upper().startswith('LINUX')
 def get_locale_codec():
     """
     Is Very Very Useful
@@ -48,7 +53,12 @@ class DoNotHaveProperVersion(BaseException):pass
 
 def has_proper_tesseract(min_version=None):
     min_version=None
-    info_lines, err_lines=exec_cmd('tesseract -v')
+    if iswin():
+        tesseract_name = 'tesseract.exe'
+    else:
+        tesseract_name = 'tesseract'
+
+    info_lines, err_lines=exec_cmd('%s -v'%tesseract_name)
 
     # java output stream is stderr !!!
     if len(info_lines) == 0:

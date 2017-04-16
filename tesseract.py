@@ -58,17 +58,22 @@ def tesseract(path, limit_config=None, args=None, session:requests=None):
         raise DoNotHaveProperVersion
 
     imgObj, image_path=get_image(path, session=session)
+    if iswin():
+        tesseract_name = 'tesseract.exe'
+    else:
+        tesseract_name = 'tesseract'
 
     if args is None:
-        cmd_str = 'tesseract -psm 8 {0} stdout '.format(image_path)
+
+        cmd_str = '{0} -psm 8 {1} stdout '.format(tesseract_name, image_path)
     else:
-        cmd_str = ' '.join(['tesseract', args, image_path, 'stdout'])
+        cmd_str = ' '.join([tesseract_name, args, image_path, 'stdout'])
         print(cmd_str)
 
     if limit_config is not None: #like digits
         cmd_str  += ' {0}'.format(limit_config)
 
-    info_lines, err_lines = exec_cmd(cmd_str, shell=True)
+    info_lines, err_lines = exec_cmd(cmd_str, shell=False)
 
     try:
         captchaResponse = info_lines[0].strip()
