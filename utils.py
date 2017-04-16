@@ -61,7 +61,7 @@ def has_proper_tesseract(min_version=None):
     info_lines, err_lines=exec_cmd('%s -v'%tesseract_name)
 
     # java output stream is stderr !!!
-    if len(info_lines) == 0:
+    if len(info_lines) == 1 and info_lines[0]=='':
         return False
 
     if min_version is not None:
